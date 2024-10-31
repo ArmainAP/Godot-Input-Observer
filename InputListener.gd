@@ -3,7 +3,8 @@ class_name InputListener extends Node
 
 signal action_pressed
 signal action_released
-signal action_process(value)
+signal action_process(value, delta)
+signal action_physics_process(value, delta)
 
 
 var _action : String = "NONE" : get = get_action
@@ -13,11 +14,15 @@ func _init(action : String):
 	_action = action
 
 
-func _process(delta):
-	action_process.emit(get_value())
+func _process(delta : float) -> void:
+	action_process.emit(get_value(), delta)
 
 
-func _input(event):
+func _physics_process(delta: float) -> void:
+	action_physics_process.emit(get_value(), delta)
+
+
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		_process_input_key(event)
 
